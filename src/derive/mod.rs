@@ -4,7 +4,7 @@ use crate::Error;
 use alloc::vec::Vec;
 use core::num::NonZeroUsize;
 
-mod array;
+pub mod array;
 mod duration;
 mod empty;
 mod impls;
@@ -13,7 +13,7 @@ mod option;
 mod result;
 mod smart_ptr;
 mod variant;
-pub(crate) mod vec;
+pub mod vec;
 
 // For derive macro.
 #[cfg(feature = "derive")]

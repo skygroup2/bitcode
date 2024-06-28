@@ -16,7 +16,7 @@ extern crate test;
 
 mod bool;
 mod buffer;
-mod coder;
+pub mod coder;
 mod consume;
 mod derive;
 mod error;
