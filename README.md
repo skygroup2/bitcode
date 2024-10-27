@@ -35,25 +35,9 @@ let decoded: Foo<'_> = bitcode::decode(&encoded).unwrap();
 assert_eq!(original, decoded);
 ```
 
-## Library Example
+## Adding Support for Libraries
 
-Add bitcode to libraries without specifying the major version so binary crates can pick the version.
-This is a minimal stable subset of the bitcode API so avoid using any other functionality.
-```toml
-bitcode = { version = "0", features = ["derive"], default-features = false, optional = true }
-```
-```rust
-#[cfg_attr(feature = "bitcode", derive(bitcode::Encode, bitcode::Decode))]
-pub struct Vec2 {
-    x: f32,
-    y: f32,
-}
-```
-
-## Tuple vs Array
-If you have multiple values of the same type:
-- Use a tuple or struct when the values are semantically different: `x: u32, y: u32`
-- Use an array when all values are semantically similar: `pixels: [u8; 16]`
+See the instructions [here](https://github.com/SoftbearStudios/bitcode/wiki/Adding-library-support)!
 
 ## Implementation Details
 - Heavily inspired by <https://github.com/That3Percent/tree-buf>
@@ -61,6 +45,9 @@ If you have multiple values of the same type:
 - Uses smaller integers where possible all the way down to 1 bit
 - Validation is performed up front on typed vectors before deserialization
 - Code is designed to be auto-vectorized by LLVM
+
+## `serde`
+A `serde` integration is gated behind the `"serde"` feature flag. Click [here](https://github.com/SoftbearStudios/bitcode/wiki/Serde) to learn more.
 
 ## `#![no_std]`
 All `std`-only functionality is gated behind the (default) `"std"` feature.

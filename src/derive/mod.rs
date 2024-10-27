@@ -5,9 +5,14 @@ use alloc::vec::Vec;
 use core::num::NonZeroUsize;
 
 pub mod array;
+pub mod convert;
 mod duration;
 mod empty;
 mod impls;
+// TODO: When ip_in_core has been stable (https://github.com/rust-lang/rust/issues/108443)
+// for long enough, remove feature check.
+#[cfg(feature = "std")]
+mod ip_addr;
 mod map;
 mod option;
 mod result;
