@@ -6,6 +6,7 @@ use core::num::NonZeroUsize;
 
 pub mod array;
 pub mod convert;
+mod atomic;
 mod duration;
 mod empty;
 mod impls;
@@ -24,12 +25,14 @@ pub mod vec;
 #[cfg(feature = "derive")]
 #[doc(hidden)]
 pub mod __private {
+    extern crate alloc;
     pub use crate::coder::{uninit_field, Buffer, Decoder, Encoder, Result, View};
     pub use crate::derive::variant::{VariantDecoder, VariantEncoder};
     pub use crate::derive::{Decode, Encode};
     pub fn invalid_enum_variant<T>() -> Result<T> {
         crate::error::err("invalid enum variant")
     }
+    pub use alloc::vec::Vec;
 }
 
 /// A type which can be encoded to bytes with [`encode`].
