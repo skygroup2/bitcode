@@ -9,7 +9,8 @@ use std::collections::{BTreeMap, HashMap};
 use std::fmt::Debug;
 use std::num::NonZeroU32;
 use std::time::Duration;
-use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddrV4, SocketAddr, SocketAddrV6};
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
+use rust_decimal::Decimal;
 
 #[inline(never)]
 fn test_derive<T: Debug + PartialEq + Encode + DecodeOwned>(data: &[u8]) {
@@ -105,6 +106,7 @@ fuzz_target!(|data: &[u8]| {
                                 ArrayVec<$typ, 0>,
                                 ArrayVec<$typ, 5>,
                                 Result<$typ, u32>,
+                                Struct<String, $typ>,
                             );
                         }
                         #[allow(unused)]
@@ -146,10 +148,23 @@ fuzz_target!(|data: &[u8]| {
         A,
         B,
         C(u16),
-        D { a: u8, b: u8 },
+        D { a: u8, b: u8, #[serde(skip)] #[bitcode(skip)] c: u8 },
         E(String),
         F,
+        G(#[bitcode(skip)] #[serde(skip)] i16),
         P(BTreeMap<u16, u8>),
+    }
+
+    #[derive(Serialize, Deserialize, Encode, Decode, Debug, PartialEq)]
+    struct Struct<D, T> {
+        foo: BitsEqualF32,
+        #[bitcode(skip)]
+        #[serde(skip)]
+        bar: f32,
+        baz: T,
+        #[bitcode(skip)]
+        #[serde(skip)]
+        def: D,
     }
 
     #[derive(Serialize, Deserialize, Encode, Decode, Debug)]
@@ -209,6 +224,7 @@ fuzz_target!(|data: &[u8]| {
         ArrayString<70>,
         ArrayVec<u8, 5>,
         ArrayVec<u8, 70>,
+        Decimal,
         Duration,
         Ipv4Addr,
         Ipv6Addr,
@@ -216,5 +232,6 @@ fuzz_target!(|data: &[u8]| {
         SocketAddrV4,
         SocketAddrV6,
         SocketAddr,
+        time::Time,
     );
 });
